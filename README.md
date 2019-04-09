@@ -1,5 +1,5 @@
 # T-Board
-A custom keyboard to use in an activity
+
 
 
 
