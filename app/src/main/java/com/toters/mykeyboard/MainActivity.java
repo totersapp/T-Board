@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        customKeyBoard = new CustomKeyBoard(this, R.id.keyboardview, R.xml.qwerty,R.id.et, CustomKeyBoard.INPUT_TYPE_TEXT);
+        customKeyBoard = new CustomKeyBoard(this, R.id.keyboardview, R.xml.numbers,R.id.et, CustomKeyBoard.INPUT_TYPE_NUMBER);
     }
 
     @Override

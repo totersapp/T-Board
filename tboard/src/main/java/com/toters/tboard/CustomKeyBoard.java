@@ -18,6 +18,7 @@ package com.toters.tboard;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.text.Editable;
@@ -38,9 +39,7 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
     private Activity mHostActivity;
 
     private final static int CodeDelete = -5; // Keyboard.KEYCODE_DELETE
-    private final static int CodeCancel = -3; // Keyboard.KEYCODE_CANCEL
     private final static int CodeSpace = 32;
-    private final static int CodeEnter = 10;
 
     public final static int INPUT_TYPE_TEXT = InputType.TYPE_CLASS_TEXT;
     public final static int INPUT_TYPE_NUMBER = InputType.TYPE_NUMBER_FLAG_DECIMAL;
@@ -65,6 +64,15 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
         mHostActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    public CustomKeyBoard (Activity host, int viewId){
+        this.mHostActivity = host;
+        mKeyboardView = mHostActivity.findViewById(viewId);
+        mKeyboardView.setPreviewEnabled(false); // NOTE Do not show the preview balloons
+        mKeyboardView.setOnKeyboardActionListener(this);
+
+        // Hide the standard keyboard initially
+        host.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
 
     private void notifyKeyBoardLayout(int layoutId) {
         switch (mEditText.getInputType()) {
@@ -99,12 +107,8 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
 
         Timber.i("KeyCode: %s", primaryCode);
         // Apply the key to the edittext
-        if (primaryCode == CodeCancel) {
-            hideCustomKeyboard();
-        } else if (primaryCode == CodeDelete) {
+     if (primaryCode == CodeDelete) {
             if (editable != null && start > 0) editable.delete(start - 1, start);
-        } else if (primaryCode == CodeEnter) {
-            hideCustomKeyboard();
         } else if (primaryCode == CodeSpace) {
             if (editable != null && editable.length() > 0) {
                 editable.insert(editable.length(), " ");
@@ -206,5 +210,43 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
         });
         // Disable spell check (hex strings look like words to Android)
         mEditText.setInputType(mEditText.getInputType() | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void registerRecyclerEditText(EditText editText, int etInputType, int layoutId){
+        this.mEditText = editText;
+        notifyKeyBoardLayout(layoutId);
+        // Make the custom keyboard appear
+        mEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            // NOTE By setting the on focus listener, we can show the custom keyboard when the edit box gets focus, but also hide it when the edit box loses focus
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) showCustomKeyboard(v);
+                else hideCustomKeyboard();
+            }
+        });
+        mEditText.setOnClickListener(new View.OnClickListener() {
+            // NOTE By setting the on click listener, we can show the custom keyboard again, by tapping on an edit box that already had focus (but that had the keyboard hidden).
+            @Override
+            public void onClick(View v) {
+                showCustomKeyboard(v);
+            }
+        });
+        // Disable standard keyboard hard way
+        // NOTE There is also an easy way: 'edittext.setInputType(InputType.TYPE_NULL)' (but you will not have a cursor, and no 'edittext.setCursorVisible(true)' doesn't work )
+        mEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                EditText edittext = (EditText) v;
+                int inType = edittext.getInputType();       // Backup the input type
+                edittext.setInputType(InputType.TYPE_NULL); // Disable standard keyboard
+                edittext.onTouchEvent(event);               // Call native handler
+                edittext.setInputType(inType);              // Restore input type
+                return true; // Consume touch event
+            }
+        });
+        // Disable spell check (hex strings look like words to Android)
+        mEditText.setInputType(mEditText.getInputType() | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mEditText.setInputType(etInputType);
     }
 }
