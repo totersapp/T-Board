@@ -18,12 +18,10 @@ package com.toters.tboard;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.text.Editable;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -39,10 +37,14 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
     private Activity mHostActivity;
 
     private final static int CodeDelete = -5; // Keyboard.KEYCODE_DELETE
+    private final static int CODE_LANGUAGE_EN = -6;
+    private final static int CODE_LANGUAGE_AR = -7;
     private final static int CodeSpace = 32;
 
     public final static int INPUT_TYPE_TEXT = InputType.TYPE_CLASS_TEXT;
     public final static int INPUT_TYPE_NUMBER = InputType.TYPE_NUMBER_FLAG_DECIMAL;
+
+    private boolean isEnglish = true;
 
     /**
      * @param host Activity class
@@ -75,16 +77,16 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
     }
 
     private void notifyKeyBoardLayout(int layoutId) {
+        final Keyboard keyboard = new Keyboard(mHostActivity, layoutId);
         switch (mEditText.getInputType()) {
             case INPUT_TYPE_TEXT:
-                mKeyboardView.setKeyboard(new Keyboard(mHostActivity, layoutId));
+                mKeyboardView.setKeyboard(keyboard);
                 break;
             case INPUT_TYPE_NUMBER:
-                mKeyboardView.setKeyboard(new Keyboard(mHostActivity, layoutId));
+                mKeyboardView.setKeyboard(keyboard);
                 break;
             default:
-                mKeyboardView.setKeyboard(new Keyboard(mHostActivity, layoutId));
-
+                mKeyboardView.setKeyboard(keyboard);
         }
     }
 
@@ -107,11 +109,21 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
 
         Timber.i("KeyCode: %s", primaryCode);
         // Apply the key to the edittext
-     if (primaryCode == CodeDelete) {
+        if (primaryCode == CodeDelete) {
             if (editable != null && start > 0) editable.delete(start - 1, start);
         } else if (primaryCode == CodeSpace) {
             if (editable != null && editable.length() > 0) {
                 editable.insert(editable.length(), " ");
+            }
+        } else if(primaryCode == CODE_LANGUAGE_AR) {
+            if (isEnglish){
+                notifyKeyBoardLayout(R.xml.qwerty_arabic);
+                isEnglish = false;
+            }
+        } else if (primaryCode == CODE_LANGUAGE_EN) {
+            if (!isEnglish) {
+                notifyKeyBoardLayout(R.xml.qwerty);
+                isEnglish = true;
             }
         } else {
             // insert character
@@ -248,5 +260,9 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
         // Disable spell check (hex strings look like words to Android)
         mEditText.setInputType(mEditText.getInputType() | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mEditText.setInputType(etInputType);
+    }
+
+    public void setLanguage(int layoutId) {
+        notifyKeyBoardLayout(layoutId);
     }
 }
