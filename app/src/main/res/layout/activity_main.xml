@@ -15,7 +15,7 @@
 
     <android.inputmethodservice.KeyboardView
         android:id="@+id/keyboardview"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:focusable="true"
         android:layout_margin="8dp"
