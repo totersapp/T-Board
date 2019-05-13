@@ -17,7 +17,7 @@
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="0.1%p"
     android:keyWidth="10%p"
-    android:keyHeight="12%p"
+    android:keyHeight="10%p"
     android:verticalGap="0.2%p">
 
     <Row>
@@ -121,6 +121,18 @@
     </Row>
 
     <Row android:rowEdgeFlags="bottom">
+        <Key
+            android:codes="-6"
+            android:isRepeatable="true"
+            android:keyWidth="8%p"
+            android:keyLabel="en"
+            android:keyEdgeFlags="right"/>
+        <Key
+            android:codes="-7"
+            android:isRepeatable="true"
+            android:keyLabel="ar"
+            android:keyWidth="8%p"
+            android:keyEdgeFlags="right"/>
         <Key
             android:codes="32"
             android:keyWidth="100%p"
