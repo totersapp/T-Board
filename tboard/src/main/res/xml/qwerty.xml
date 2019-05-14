@@ -16,8 +16,8 @@
 
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="0.2%p"
-    android:keyWidth="10%p"
-    android:keyHeight="10%p"
+    android:keyWidth="50dp"
+    android:keyHeight="50dp"
     android:verticalGap="0.2%p">
 
     <Row>
@@ -115,7 +115,7 @@
         <Key
             android:codes="-5"
             android:isRepeatable="true"
-            android:keyWidth="15%p"
+            android:keyWidth="50dp"
             android:keyEdgeFlags="right"
             android:keyIcon="@drawable/ic_sys_delete" />
     </Row>
