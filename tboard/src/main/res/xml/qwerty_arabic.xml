@@ -16,8 +16,8 @@
 
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap=".15%p"
-    android:keyWidth="8.0%p"
-    android:keyHeight="8.0%p"
+    android:keyWidth="60dp"
+    android:keyHeight="65dp"
     android:verticalGap=".2%p">
     <Row>
         <Key android:codes="1590" android:keyEdgeFlags="left" android:keyLabel="ض" />
@@ -45,7 +45,7 @@
         <Key android:codes="1603" android:keyLabel="ك" />
         <Key android:codes="1731" android:keyLabel="ۃ" />
     </Row>
-    <Row android:keyWidth="12.0%p">
+    <Row android:keyWidth="50dp">
         <Key android:codes="1569" android:keyLabel="ء" />
         <Key android:codes="1592" android:keyLabel="ظ" />
         <Key android:codes="1591" android:keyLabel="ط" />
@@ -55,24 +55,24 @@
         <Key android:codes="1585" android:keyLabel="ر" />
         <Key android:codes="1608" android:keyLabel="و" />
         <Key android:codes="8216" android:keyLabel="‘" />
-        <Key android:keyWidth="12.0%p" android:codes="-5" android:keyEdgeFlags="right" android:isModifier="true" android:isRepeatable="true" android:keyIcon="@drawable/ic_sys_delete" />
+        <Key android:keyWidth="155dp" android:codes="-5" android:keyEdgeFlags="right" android:isModifier="true" android:isRepeatable="true" android:keyIcon="@drawable/ic_sys_delete" />
     </Row>
     <Row android:rowEdgeFlags="bottom">
         <Key
             android:codes="-6"
             android:isRepeatable="true"
-            android:keyWidth="12.0%p"
+            android:keyWidth="100dp"
             android:keyLabel="en"
             android:keyEdgeFlags="right"/>
         <Key
             android:codes="-7"
             android:isRepeatable="true"
             android:keyLabel="ar"
-            android:keyWidth="12.0%p"
+            android:keyWidth="100dp"
             android:keyEdgeFlags="right"/>
         <Key
             android:codes="32"
-            android:keyWidth="100.0%p"
+            android:keyWidth="420dp"
             android:isRepeatable="true"
             android:keyIcon="@drawable/ic_sys_space" />
     </Row>

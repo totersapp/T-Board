@@ -16,8 +16,8 @@
 
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="0.1%p"
-    android:keyWidth="10%p"
-    android:keyHeight="10%p"
+    android:keyWidth="68dp"
+    android:keyHeight="60dp"
     android:verticalGap="0.2%p">
 
     <Row>
@@ -57,7 +57,7 @@
             android:keyLabel="p" />
     </Row>
 
-    <Row>
+    <Row android:keyWidth="70dp">
         <Key
             android:codes="97"
             android:keyEdgeFlags="left"
@@ -115,7 +115,7 @@
         <Key
             android:codes="-5"
             android:isRepeatable="true"
-            android:keyWidth="15%p"
+            android:keyWidth="162dp"
             android:keyEdgeFlags="right"
             android:keyIcon="@drawable/ic_sys_delete" />
     </Row>
@@ -124,18 +124,18 @@
         <Key
             android:codes="-6"
             android:isRepeatable="true"
-            android:keyWidth="8%p"
+            android:keyWidth="100dp"
             android:keyLabel="en"
             android:keyEdgeFlags="right"/>
         <Key
             android:codes="-7"
             android:isRepeatable="true"
             android:keyLabel="ar"
-            android:keyWidth="8%p"
+            android:keyWidth="100dp"
             android:keyEdgeFlags="right"/>
         <Key
             android:codes="32"
-            android:keyWidth="100%p"
+            android:keyWidth="425dp"
             android:isRepeatable="true"
             android:keyIcon="@drawable/ic_sys_space" />
     </Row>
