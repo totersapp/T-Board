@@ -104,32 +104,36 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
     public void onKey(int primaryCode, int[] keyCodes) {
         View focusCurrent = mHostActivity.getWindow().getCurrentFocus();
         mEditText = (EditText) focusCurrent;
-        Editable editable = mEditText.getText();
-        int start = mEditText.getSelectionStart();
+        if (mEditText != null) {
+            Editable editable = mEditText.getText();
+            int start = mEditText.getSelectionStart();
 
-        Timber.i("KeyCode: %s", primaryCode);
-        // Apply the key to the edittext
-        if (primaryCode == CodeDelete) {
-            if (editable != null && start > 0) editable.delete(start - 1, start);
-        } else if (primaryCode == CodeSpace) {
-            if (editable != null && editable.length() > 0) {
-                editable.insert(editable.length(), " ");
+            Timber.i("KeyCode: %s", primaryCode);
+            // Apply the key to the edittext
+            if (primaryCode == CodeDelete) {
+                if (editable != null && start > 0) editable.delete(start - 1, start);
+            } else if (primaryCode == CodeSpace) {
+                if (editable != null && editable.length() > 0) {
+                    editable.insert(editable.length(), " ");
+                }
+            } else if(primaryCode == CODE_LANGUAGE_AR) {
+                if (isEnglish){
+                    notifyKeyBoardLayout(R.xml.qwerty_arabic);
+                    isEnglish = false;
+                }
+            } else if (primaryCode == CODE_LANGUAGE_EN) {
+                if (!isEnglish) {
+                    notifyKeyBoardLayout(R.xml.qwerty);
+                    isEnglish = true;
+                }
+            } else {
+                // insert character
+                editable.insert(start, Character.toString((char) primaryCode));
             }
-        } else if(primaryCode == CODE_LANGUAGE_AR) {
-            if (isEnglish){
-                notifyKeyBoardLayout(R.xml.qwerty_arabic);
-                isEnglish = false;
+            if (editable != null) {
+                Timber.i("Editable : %s", editable.toString());
             }
-        } else if (primaryCode == CODE_LANGUAGE_EN) {
-            if (!isEnglish) {
-                notifyKeyBoardLayout(R.xml.qwerty);
-                isEnglish = true;
-            }
-        } else {
-            // insert character
-            editable.insert(start, Character.toString((char) primaryCode));
         }
-        Timber.i("Editable : %s", editable.toString());
     }
 
     @Override
