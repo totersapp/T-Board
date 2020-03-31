@@ -18,8 +18,10 @@ package com.toters.tboard;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.view.MotionEvent;
@@ -35,6 +37,8 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
     private KeyboardView mKeyboardView;
     private EditText mEditText;
     private Activity mHostActivity;
+    private View mInflater;
+    private Dialog mDialog = null;
 
     private final static int CodeDelete = -5; // Keyboard.KEYCODE_DELETE
     private final static int CODE_LANGUAGE_EN = -6;
@@ -76,8 +80,25 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
         host.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    public CustomKeyBoard(DialogFragment dialogFragment, View inflater, int viewid, int layoutid) {
+        mHostActivity = dialogFragment.getActivity();
+        mInflater = inflater;
+        mDialog = dialogFragment.getDialog();
+        mKeyboardView = (KeyboardView) mInflater.findViewById(viewid);
+        Keyboard mKeyBoard = new Keyboard(dialogFragment.getContext(), layoutid);
+        mKeyboardView.setPreviewEnabled(false);
+        mKeyboardView.setOnKeyboardActionListener(this);
+        dialogFragment.getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
     private void notifyKeyBoardLayout(int layoutId) {
-        final Keyboard keyboard = new Keyboard(mHostActivity, layoutId);
+        Keyboard keyboard = null;
+        if(mDialog != null) {
+            keyboard = new Keyboard(mDialog.getContext(), layoutId);
+        } else {
+            keyboard = new Keyboard(mHostActivity, layoutId);
+        }
         switch (mEditText.getInputType()) {
             case INPUT_TYPE_TEXT:
                 mKeyboardView.setKeyboard(keyboard);
@@ -102,7 +123,12 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
-        View focusCurrent = mHostActivity.getWindow().getCurrentFocus();
+        View focusCurrent = null;
+        if(mDialog != null) {
+            focusCurrent = mDialog.getWindow().getCurrentFocus();
+        } else {
+            focusCurrent = mHostActivity.getWindow().getCurrentFocus();
+        }
         mEditText = (EditText) focusCurrent;
         if (mEditText != null) {
             Editable editable = mEditText.getText();
@@ -175,7 +201,11 @@ public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
         mKeyboardView.setVisibility(View.VISIBLE);
         mKeyboardView.setEnabled(true);
         if (v != null)
-            ((InputMethodManager) mHostActivity.getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+            if(mDialog != null) {
+                ((InputMethodManager) mDialog.getContext().getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+            } else {
+                ((InputMethodManager) mHostActivity.getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
     }
 
     /**
