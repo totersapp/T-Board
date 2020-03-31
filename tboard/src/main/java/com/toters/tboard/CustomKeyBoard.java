@@ -30,6 +30,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import timber.log.Timber;
+
 public class CustomKeyBoard implements KeyboardView.OnKeyboardActionListener {
 
     private KeyboardView mKeyboardView;
